@@ -1,0 +1,46 @@
+{
+  "name": "progressedu",
+  "version": "1.0.0",
+  "description": "progressive education application",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " parcel public/index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "vsssurajk",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@google/genai": "^0.7.0",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
+    "@reduxjs/toolkit": "^2.6.1",
+    "@tailwindcss/postcss": "^4.1.3",
+    "antd": "^5.24.6",
+    "dotenv": "^16.4.7",
+    "lottie-react": "^2.4.1",
+    "nodemon": "^3.1.9",
+    "openai": "^4.91.1",
+    "parcel": "^2.14.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-lottie": "^1.2.10",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.5.0",
+    "react-router-dom": "^6.22.0",
+    "tailwindcss": "^4.1.3"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "events": "^3.3.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "string_decoder": "^1.3.0",
+    "vm-browserify": "^1.1.2"
+  }
+}

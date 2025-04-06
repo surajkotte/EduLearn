@@ -1,0 +1,68 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getAllLearningModles } from "../api/apiData";
+const Dashboard = () => {
+  const [cardsData, setCardsData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllLearningModles();
+      if (data && data.length > 0) {
+        setCardsData(data);
+      }
+    };
+    fetchData();
+  }, []);
+  return (
+    <div className="p-6 h-screen">
+      <h1 className="text-3xl font-bold mb-6 ">Dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
+        {cardsData.map((card, idx) => (
+          <Link to={`/cards/${card?._id}`} key={card?._id}>
+            {" "}
+            <div
+              key={idx}
+              className="bg-gray-300 rounded-2xl shadow-md hover:cursor-pointer transition duration-300 relative hover:scale-105"
+            >
+              <img
+                src={card.image}
+                alt={card.name}
+                className="rounded-t-2xl w-full h-40 object-cover"
+              />
+              <div className="absolute top-2 left-2 bg-white rounded-full p-1 shadow-md">
+                <img
+                  src={card.logo}
+                  alt={`${card.name} logo`}
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <div className="p-4">
+                <h2 className="text-xl font-semibold text-gray-800 mb-1">
+                  {card.name}
+                </h2>
+                <p className="text-gray-500 mb-2">{card.description}</p>
+                <div className="flex justify-between text-sm text-gray-600 mb-2">
+                  <span>Levels: {card.levels}</span>
+                  <span>Status: {card.status}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                  <div
+                    className={`h-2.5 rounded-full ${
+                      card.progress > 0 ? "bg-blue-500" : "bg-gray-400"
+                    }`}
+                    style={{ width: `${card.progress}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-400">
+                  {card.progress}% completed
+                </p>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
