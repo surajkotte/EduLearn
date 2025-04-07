@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { getCategoryById } from "../../api/apiData";
+import { createNewCategory, getCategoryById } from "../../api/apiData";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../slice/modalSlice";
 import AddNewCategory from "./AddNewCategory";
@@ -11,6 +11,25 @@ const CategoryModal = () => {
   const [modalKey, setModalKey] = useState("");
   const { categoryId } = useParams();
   const dispatch = useDispatch();
+  const saveClicked = async (data) => {
+    try {
+      const responseData = await createNewCategory(data, categoryId);
+      if (responseData) {
+        const groupedData = responseData?.categoryData?.reduce(
+          (acc = {}, item) => {
+            const { categoryType, ...rest } = item;
+            if (!acc[categoryType]) {
+              acc[categoryType] = [];
+            }
+            acc[categoryType].push(rest);
+            return acc;
+          },
+          {}
+        );
+        setSelectedCardData(groupedData);
+      }
+    } catch (err) {}
+  };
   useEffect(() => {
     const fetchData = async () => {
       const data = await getCategoryById(categoryId);
@@ -78,7 +97,7 @@ const CategoryModal = () => {
             uniqueKey={modalKey}
             closeOnOutsideClick={true}
           >
-            <AddNewCategory />
+            <AddNewCategory onSaveClicked={saveClicked} />
           </Modal>
         )}
       </div>

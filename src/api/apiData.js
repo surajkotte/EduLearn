@@ -104,3 +104,22 @@ export const createLearningModule = async (data) => {
     return { messageType: "E", message: err.message };
   }
 };
+
+export const createNewCategory = async (data, learningModuleId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/category/createNew/${learningModuleId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data }),
+      }
+    );
+    const responseData = await response.json();
+    return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};

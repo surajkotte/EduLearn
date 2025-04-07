@@ -2,14 +2,22 @@ import React, { useState } from "react";
 import { TextField, Checkbox } from "@mui/material";
 import { Button } from "@mui/material";
 import Select from "react-select";
-const AddNewCategory = () => {
-  const [learningModalInfo, setLearningModalInfo] = useState("");
+const AddNewCategory = ({ onSaveClicked }) => {
+  const [learningModalInfo, setLearningModalInfo] = useState({
+    title: "",
+    description: "",
+    image: "",
+    categoryType: "",
+  });
   const options = [
     { value: "Subject", label: "Subject" },
     { value: "Topic", label: "Topic" },
     { value: "Difficulty", label: "Difficulty" },
     { value: "Test", label: "Test" },
   ];
+  const onSaveClick = () => {
+    onSaveClicked(learningModalInfo);
+  };
   return (
     <div className="flex flex-col gap-3 p-4">
       <div className="flex justify-center">
@@ -172,7 +180,7 @@ const AddNewCategory = () => {
           variant="contained"
           color="primary"
           sx={{ width: "100%" }}
-          //onClick={onSaveClicked}
+          onClick={onSaveClick}
         >
           save
         </Button>
