@@ -34,7 +34,7 @@ const Sidebar = ({ children }) => {
   return (
     <div className="flex h-screen w-full flex-col bg-gray-900 text-white">
       <div className="flex w-full flex-1 overflow-hidden">
-        <div className="fixed left-2 top-1/2 transform -translate-y-1/2 flex flex-col h-2/5 border-[1px] border-gray-700 w-[60px] rounded-3xl justify-center items-center gap-6 bg-gray-800 bg-opacity-60 backdrop-blur-md z-10 shadow-lg">
+        <div className="fixed left-2 top-1/2 transform -translate-y-1/2 flex flex-col h-fit border-[1px] border-gray-700 w-[60px] rounded-3xl justify-center items-center gap-6 bg-gray-800 bg-opacity-60 backdrop-blur-md z-10 shadow-lg p-3">
           {icons.map((iconinfo, index) => (
             <Link
               to={iconinfo.link}
