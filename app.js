@@ -8,6 +8,8 @@ import QuestionsCompnent from "./src/components/DashboardComponents/QuestionsCom
 import { Provider } from "react-redux";
 import store from "./src/Redux/store";
 import Loader from "./src/utils/Loader";
+import LearningModule from "./src/components/ModuleCreationsComponents/LearningModule";
+import CategoryModal from "./src/components/ModuleCreationsComponents/CategoryModal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
@@ -30,13 +32,13 @@ const routers = createBrowserRouter([
       },
       {
         path: "/chat",
-        element: <Dashboard />,
+        element: <LearningModule />,
       },
       {
         path: "/connections",
         element: <Dashboard />,
       },
-      { path: "/notifications", element: <Dashboard /> },
+      { path: "/notifications", element: <LearningModule /> },
       { path: "/profile", element: <Dashboard /> },
       { path: "/cards/:cardId", element: <DashboardCard /> },
       {
@@ -46,6 +48,10 @@ const routers = createBrowserRouter([
       {
         path: "/questions/:categoryId",
         element: <QuestionsCompnent />,
+      },
+      {
+        path: "/category/createNew/:categoryId",
+        element: <CategoryModal />,
       },
     ],
   },

@@ -30,7 +30,7 @@ const Dashboard = () => {
               />
               <div className="absolute top-2 left-2 bg-white rounded-full p-1 shadow-md">
                 <img
-                  src={card.logo}
+                  src={card.logo || null}
                   alt={`${card.name} logo`}
                   className="w-8 h-8 object-contain"
                 />
@@ -65,4 +65,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

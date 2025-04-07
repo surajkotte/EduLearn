@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   getAllQuestionsByCategoryId,
+  getTestConfig,
   updateQuestionData,
 } from "../../api/apiData";
 import { AiFillOpenAI } from "react-icons/ai";
@@ -15,12 +16,12 @@ import { Button } from "@mui/material";
 const QuestionsCompnent = () => {
   const { categoryId } = useParams();
   const [questions, setQuestions] = useState([]);
+  const [testConfig, setTestConfig] = useState("");
   const [aiPromptClicked, setAiPromptClicked] = useState(null);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       const responseData = await getAllQuestionsByCategoryId(categoryId);
-      // console.log(responseData);
       if (responseData) {
         const modifiedData = responseData?.questionData?.map((item) => {
           return {
@@ -34,6 +35,10 @@ const QuestionsCompnent = () => {
           };
         });
         setQuestions(modifiedData);
+        const testConfigResponse = await getTestConfig(categoryId);
+        if (testConfigResponse) {
+          setTestConfig(testConfigResponse);
+        }
       }
     };
     fetchData();

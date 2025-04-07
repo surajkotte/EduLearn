@@ -29,6 +29,24 @@ export const getCategoryById = async (learningModuleId) => {
   return responseData?.data;
 };
 
+export const getTestConfig = async (categoryId) => {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/category/getCategoryTestConfig/${categoryId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response?.data;
+  } catch (err) {
+    console.error("Error fetching questions:", error);
+    return null; // or handle the error as needed
+  }
+};
+
 export const getAllQuestionsByCategoryId = async (categoryId) => {
   try {
     const response = await fetch(
@@ -65,5 +83,24 @@ export const updateQuestionData = async (categoryId, data) => {
   } catch (error) {
     console.log("Error updating question data:", error);
     return null;
+  }
+};
+
+export const createLearningModule = async (data) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/learning/createNew`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data }),
+      }
+    );
+    const responseData = await response.json();
+    return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
   }
 };
