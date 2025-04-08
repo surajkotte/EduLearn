@@ -101,7 +101,7 @@ const LearningModule = () => {
           <Modal
             maxWidth={"md"}
             uniqueKey={modalKey?.type}
-            closeOnOutsideClick={false}
+            closeOnOutsideClick={true}
             style=""
           >
             {modalKey?.type === "newLearningModal" && (

@@ -10,6 +10,7 @@ import store from "./src/Redux/store";
 import Loader from "./src/utils/Loader";
 import LearningModule from "./src/components/ModuleCreationsComponents/LearningModule";
 import CategoryModal from "./src/components/ModuleCreationsComponents/CategoryModal";
+import QuestionModal from "./src/components/ModuleCreationsComponents/QuestionModal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
@@ -52,6 +53,10 @@ const routers = createBrowserRouter([
       {
         path: "/category/createNew/:categoryId",
         element: <CategoryModal />,
+      },
+      {
+        path: "/questions/createNew/:categoryId",
+        element: <QuestionModal />,
       },
     ],
   },

@@ -123,3 +123,41 @@ export const createNewCategory = async (data, learningModuleId) => {
     return { messageType: "E", message: err.message };
   }
 };
+
+export const createNewQuestion = async (data, categoryId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/questions/createNew/${categoryId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data }),
+      }
+    );
+    const responseData = await response.json();
+    return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const deleteQuestion = async (categoryId, questionId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/questions/deleteQuestion/${questionId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ categoryId: categoryId }),
+      }
+    );
+    const responseData = await response.json();
+    return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};

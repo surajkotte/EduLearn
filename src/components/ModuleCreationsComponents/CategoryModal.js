@@ -6,6 +6,7 @@ import { openModal } from "../../slice/modalSlice";
 import AddNewCategory from "./AddNewCategory";
 import { useParams } from "react-router-dom";
 import Modal from "../../utils/modal";
+import { Link } from "react-router-dom";
 const CategoryModal = () => {
   const [selectedCardData, setSelectedCardData] = useState(null);
   const [modalKey, setModalKey] = useState("");
@@ -64,29 +65,37 @@ const CategoryModal = () => {
         </div>
         {selectedCardData &&
           Object?.entries(selectedCardData).map(([key, value]) => (
-            <div className="mb-8 flex flex-col" key={key}>
+            <div
+              className="mb-8 flex flex-col"
+              key={`QuestionCrreateNew${key}`}
+            >
               <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex items-center gap-2">
                 {key === "Subject" ? "📘" : "📗"} {key}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
                 {value.map((item) => (
-                  <div
-                    key={item._id}
-                    className={`rounded-xl shadow-md hover:shadow-lg p-4 transition duration-300 ${
-                      key === "Subject"
-                        ? "bg-blue-100"
-                        : key === "Topic"
-                        ? "bg-green-100"
-                        : "bg-yellow-100"
-                    } hover:scale-105`}
+                  <Link
+                    to={`/questions/createNew/${item._id}`}
+                    key={`QuestionsCreateNew${item._id}`}
                   >
-                    <h3 className="text-xl font-medium text-gray-700 mb-1">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Questions: <span className="font-semibold">{2}</span>
-                    </p>
-                  </div>
+                    <div
+                      key={item._id}
+                      className={`rounded-xl shadow-md hover:shadow-lg p-4 transition duration-300 ${
+                        key === "Subject"
+                          ? "bg-blue-100"
+                          : key === "Topic"
+                          ? "bg-green-100"
+                          : "bg-yellow-100"
+                      } hover:scale-105`}
+                    >
+                      <h3 className="text-xl font-medium text-gray-700 mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Questions: <span className="font-semibold">{2}</span>
+                      </p>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>

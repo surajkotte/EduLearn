@@ -24,7 +24,7 @@ const Dashboard = () => {
               className="bg-gray-300 rounded-2xl shadow-md hover:cursor-pointer transition duration-300 relative hover:scale-105"
             >
               <img
-                src={card.image}
+                src={card.image || null}
                 alt={card.name}
                 className="rounded-t-2xl w-full h-40 object-cover"
               />

@@ -8,6 +8,12 @@ const AddNewCategory = ({ onSaveClicked }) => {
     description: "",
     image: "",
     categoryType: "",
+    isTimeLimitAllowed: false,
+    timeLimit: "",
+    retryPossible: false,
+    maxRetryCount: "",
+    allowRetake: false,
+    instructions: "",
   });
   const options = [
     { value: "Subject", label: "Subject" },
@@ -52,6 +58,7 @@ const AddNewCategory = ({ onSaveClicked }) => {
       />
       <Select
         options={options}
+        className=" min-h-12 z-50"
         onChange={(e) => {
           setLearningModalInfo((prev) => ({
             ...prev,
