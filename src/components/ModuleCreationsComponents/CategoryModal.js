@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { createNewCategory, getCategoryById } from "../../api/apiData";
 import { useDispatch } from "react-redux";
-import { openModal } from "../../slice/modalSlice";
+import { closeModal, openModal } from "../../slice/modalSlice";
 import AddNewCategory from "./AddNewCategory";
 import { useParams } from "react-router-dom";
 import Modal from "../../utils/modal";
@@ -28,6 +28,7 @@ const CategoryModal = () => {
           {}
         );
         setSelectedCardData(groupedData);
+        dispatch(closeModal());
       }
     } catch (err) {}
   };
