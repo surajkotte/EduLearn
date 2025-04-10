@@ -11,13 +11,17 @@ import Loader from "./src/utils/Loader";
 import LearningModule from "./src/components/ModuleCreationsComponents/LearningModule";
 import CategoryModal from "./src/components/ModuleCreationsComponents/CategoryModal";
 import QuestionModal from "./src/components/ModuleCreationsComponents/QuestionModal";
-
+import Login from "./src/components/Login";
+import AuthenticatedRoute from "./src/utils/AuthenticatedRoute";
+import ProtectedRoute from "./src/utils/ProtectedRoute";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
     <Sidebar>
       <Loader>
-        <Outlet />
+        <AuthenticatedRoute>
+          <Outlet />
+        </AuthenticatedRoute>
       </Loader>
     </Sidebar>
   );
@@ -62,7 +66,11 @@ const routers = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Dashboard />,
+    element: (
+      <ProtectedRoute>
+        <Login />
+      </ProtectedRoute>
+    ),
   },
 ]);
 root.render(

@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllLearningModles } from "../api/apiData";
+import { showLoader, hideLoader } from "../slice/loaderSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const [cardsData, setCardsData] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllLearningModles();
-      if (data && data.length > 0) {
-        setCardsData(data);
+      dispatch(showLoader());
+      try {
+        const data = await getAllLearningModles();
+        if (data?.messageType == "E") {
+          throw new Error("Invalid token");
+        }
+        if (data && data.length > 0) {
+          setCardsData(data);
+        }
+      } catch (err) {
+        navigate("/login");
+      } finally {
+        dispatch(hideLoader());
       }
     };
     fetchData();

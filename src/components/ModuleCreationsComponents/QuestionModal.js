@@ -12,6 +12,10 @@ import Modal from "../../utils/modal";
 import { openModal, closeModal } from "../../slice/modalSlice";
 import { useDispatch } from "react-redux";
 import AddQuestion from "./AddQuestion";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import { showLoader, hideLoader } from "../../slice/loaderSlice";
 
 const QuestionModal = () => {
   const { categoryId } = useParams();
@@ -19,6 +23,7 @@ const QuestionModal = () => {
   const [modalKey, setModalKey] = useState("");
   const dispatch = useDispatch();
   const saveClicked = async (data) => {
+    dispatch(showLoader());
     const qoptions = data?.options.map((opt, index) => {
       return {
         option: opt,
@@ -41,8 +46,10 @@ const QuestionModal = () => {
       setQuestions(modifiedData);
       dispatch(closeModal());
     }
+    dispatch(hideLoader());
   };
   const deleteClicked = async (questionId) => {
+    dispatch(showLoader());
     const response = await deleteQuestion(categoryId, questionId);
     if (response?.questionData) {
       const modifiedData = response?.questionData?.filter((item) => {
@@ -50,9 +57,11 @@ const QuestionModal = () => {
       });
       setQuestions(modifiedData);
     }
+    dispatch(hideLoader());
   };
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(showLoader());
       const responseData = await getAllQuestionsByCategoryId(categoryId);
       if (responseData) {
         const modifiedData = responseData?.questionData?.map((item) => ({
@@ -60,6 +69,7 @@ const QuestionModal = () => {
         }));
         setQuestions(modifiedData);
       }
+      dispatch(hideLoader());
     };
     fetchData();
   }, [categoryId]);
@@ -99,15 +109,26 @@ const QuestionModal = () => {
                   {idx + 1}. {questionInfo.question}
                 </h2>
                 <div className="flex gap-3">
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     onClick={() => {
                       deleteClicked(questionInfo?._id);
                     }}
                   >
-                    Delete
-                  </Button>
-                  <Button variant="outlined">Edit</Button>
+                    <MdDelete />
+                  </Button> */}
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => {
+                      deleteClicked(questionInfo?._id);
+                    }}
+                  >
+                    <DeleteIcon fontSize="inherit" color="primary" />
+                  </IconButton>
+                  <IconButton aria-label="delete" size="small">
+                    <EditIcon fontSize="inherit" color="primary" />
+                  </IconButton>
                 </div>
               </div>
 

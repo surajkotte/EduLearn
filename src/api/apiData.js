@@ -1,32 +1,47 @@
+import { message } from "antd";
 import dotenv from "dotenv";
 dotenv.config();
 
 const BACKEND_URL = "http://localhost:4000";
 //  learning models related api calls
 export const getAllLearningModles = async () => {
-  console.log("Fetching Learning Models..." + BACKEND_URL);
-  const response = await fetch(`${BACKEND_URL}/learning/getAll`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const responseData = await response.json();
-  return responseData?.data;
-};
-
-export const getCategoryById = async (learningModuleId) => {
-  const response = await fetch(
-    `${BACKEND_URL}/category/getCategoryById/${learningModuleId}`,
-    {
+  try {
+    console.log("Fetching Learning Models..." + BACKEND_URL);
+    const response = await fetch(`${BACKEND_URL}/learning/getAll`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
+    });
+    const responseData = await response.json();
+    if (responseData?.messageType == "S") {
+      return responseData?.data;
+    } else {
+      throw new Error(responseData?.message);
     }
-  );
-  const responseData = await response.json();
-  return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const getCategoryById = async (learningModuleId) => {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/category/getCategoryById/${learningModuleId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const responseData = await response.json();
+    if (responseData?.messageType == "S") {
+      return responseData?.data;
+    }
+  } catch (err) {
+    navigate("/login");
+  }
 };
 
 export const getTestConfig = async (categoryId) => {
@@ -134,6 +149,7 @@ export const createNewQuestion = async (data, categoryId) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...data }),
+        credentials: "include",
       }
     );
     const responseData = await response.json();
@@ -153,10 +169,66 @@ export const deleteQuestion = async (categoryId, questionId) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ categoryId: categoryId }),
+        credentials: "include",
       }
     );
     const responseData = await response.json();
     return responseData?.data;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const userLogin = async (data) => {
+  try {
+    if (!data?.emailId || !data?.password) {
+      throw new Error("Enter email or password");
+    }
+    const response = await fetch(`${process.env.BACKEND_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+    const responseData = await response.json();
+    if (responseData?.messageType == "S") {
+      return responseData?.data;
+    }
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const userLogout = async () => {
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const responseData = await response.json();
+    if (responseData?.messageType == "S") {
+      return responseData?.data;
+    }
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const checkIsAuthenticated = async () => {
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/checkAuth`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const responseData = await response.json();
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
