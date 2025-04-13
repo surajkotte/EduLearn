@@ -14,6 +14,8 @@ import QuestionModal from "./src/components/ModuleCreationsComponents/QuestionMo
 import Login from "./src/components/Login";
 import AuthenticatedRoute from "./src/utils/AuthenticatedRoute";
 import ProtectedRoute from "./src/utils/ProtectedRoute";
+import Toast from "./src/utils/Toast";
+import './src/index.css'
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
@@ -55,7 +57,7 @@ const routers = createBrowserRouter([
         element: <QuestionsCompnent />,
       },
       {
-        path: "/category/createNew/:categoryId",
+        path: "/category/createNew/:learningModuleId",
         element: <CategoryModal />,
       },
       {
@@ -75,6 +77,8 @@ const routers = createBrowserRouter([
 ]);
 root.render(
   <Provider store={store}>
-    <RouterProvider router={routers} />
+    <Toast>
+      <RouterProvider router={routers} />
+    </Toast>
   </Provider>
 );

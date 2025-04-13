@@ -12,6 +12,7 @@ export const getAllLearningModles = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     const responseData = await response.json();
     if (responseData?.messageType == "S") {
@@ -133,7 +134,7 @@ export const createNewCategory = async (data, learningModuleId) => {
       }
     );
     const responseData = await response.json();
-    return responseData?.data;
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -153,7 +154,7 @@ export const createNewQuestion = async (data, categoryId) => {
       }
     );
     const responseData = await response.json();
-    return responseData?.data;
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -173,7 +174,7 @@ export const deleteQuestion = async (categoryId, questionId) => {
       }
     );
     const responseData = await response.json();
-    return responseData?.data;
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -227,6 +228,49 @@ export const checkIsAuthenticated = async () => {
       },
       credentials: "include",
     });
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const deleteAllQuestions = async (categoryId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/questions/deleteAll`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ categoryId: categoryId }),
+        credentials: "include",
+      }
+    );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const deleteCategory = async (learningModuleId, categoryId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/category/deleteCategory`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          learningModuleId: learningModuleId,
+          categoryId: categoryId,
+        }),
+        credentials: "include",
+      }
+    );
     const responseData = await response.json();
     return responseData;
   } catch (err) {

@@ -34,7 +34,7 @@ const AuthenticatedRoute = ({ children }) => {
       dispatch(clearUserData());
     }
   };
-  const checkToken = () => {
+  const checkToken = async () => {
     const token = getCookie();
     if (!token) {
       setIsAuthenticated(false);
@@ -42,25 +42,24 @@ const AuthenticatedRoute = ({ children }) => {
       navigate("/login");
     }
     try {
-      const decoded = jwtDecode(token);
+      const decoded = await jwtDecode(token);
       const currentTime = Date.now() / 1000;
       if (decoded.exp < currentTime) {
         dispatch(clearUserData());
         setIsAuthenticated(false);
         return false;
       } else {
-        setIsAuthenticated(true);
+        //setIsAuthenticated(true);
       }
       const timeToExpiration = decoded.exp - currentTime;
       if (timeToExpiration < 300) {
         refreshToken(token);
       }
-      const nextCheckDelay = Math.max(timeToExpiration - 300, 1) * 1000;
-      setTimeout(checkToken, nextCheckDelay);
-      setIsAuthenticated(true);
+      //const nextCheckDelay = Math.max(timeToExpiration - 300, 1) * 1000;
+      //setTimeout(checkToken, nextCheckDelay);
       return true;
     } catch (error) {
-      console.error("Invalid token:", error);
+      console.log("Invalid token:", error);
       dispatch(clearUserData());
       setIsAuthenticated(false);
       return false;
@@ -69,22 +68,22 @@ const AuthenticatedRoute = ({ children }) => {
   useEffect(() => {
     const isValid = checkToken();
     if (isValid) {
-      // Initial scheduling based on token expiration
       const cookie = document.cookie;
       const cookieName = cookie.split("token=");
       if (cookieName.length >= 2) {
-        const decoded = jwtDecode(cookieName[1]);
-        const timeToExpiration = decoded.exp - Date.now() / 1000;
-        const nextCheckDelay = Math.max(timeToExpiration - 300, 1) * 1000;
-        const timeoutId = setTimeout(checkToken, nextCheckDelay);
-        return () => clearTimeout(timeoutId); // Cleanup on unmount
+        // const decoded = jwtDecode(cookieName[1]);
+        // const timeToExpiration = decoded.exp - Date.now() / 1000;
+        // const nextCheckDelay = Math.max(timeToExpiration - 300, 1) * 1000;
+        // const timeoutId = setTimeout(checkToken, nextCheckDelay);
+        setIsAuthenticated(true);
+        // return () => clearTimeout(timeoutId);
       } else {
         setIsAuthenticated(false);
         dispatch(clearUserData());
       }
     }
-  });
-  return isAUthenticated ? children : <Login />;
+  }, []);
+  return isAUthenticated == true ? children : <Login />;
 };
 
 export default AuthenticatedRoute;

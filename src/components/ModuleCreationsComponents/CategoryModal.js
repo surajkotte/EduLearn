@@ -1,22 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { createNewCategory, getCategoryById } from "../../api/apiData";
+import {
+  createNewCategory,
+  getCategoryById,
+  deleteCategory,
+} from "../../api/apiData";
 import { useDispatch } from "react-redux";
 import { closeModal, openModal } from "../../slice/modalSlice";
 import AddNewCategory from "./AddNewCategory";
 import { useParams } from "react-router-dom";
 import Modal from "../../utils/modal";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import { addToast } from "../../slice/toastSlice";
+import { hideLoader, showLoader } from "../../slice/loaderSlice";
 const CategoryModal = () => {
   const [selectedCardData, setSelectedCardData] = useState(null);
   const [modalKey, setModalKey] = useState("");
-  const { categoryId } = useParams();
+  const { learningModuleId } = useParams();
   const dispatch = useDispatch();
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      dispatch(showLoader());
+      const responseData = await deleteCategory(learningModuleId, categoryId);
+      if (responseData?.messageType == "E") {
+        dispatch(hideLoader());
+        dispatch(
+          addToast({ messageType: "E", message: responseData?.message })
+        );
+      } else {
+        if (responseData) {
+          const groupedData = responseData?.data?.categoryData?.reduce(
+            (acc = {}, item) => {
+              const { categoryType, ...rest } = item;
+              if (!acc[categoryType]) {
+                acc[categoryType] = [];
+              }
+              acc[categoryType].push(rest);
+              return acc;
+            },
+            {}
+          );
+          setSelectedCardData(groupedData);
+          dispatch(
+            addToast({ messageType: "S", message: "Deleted successfully" })
+          );
+        }
+      }
+    } catch (err) {
+      dispatch(addToast({ messageType: "E", message: err?.message }));
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
   const saveClicked = async (data) => {
     try {
-      const responseData = await createNewCategory(data, categoryId);
-      if (responseData) {
-        const groupedData = responseData?.categoryData?.reduce(
+      const responseData = await createNewCategory(data, learningModuleId);
+      if (responseData?.messageType == "S") {
+        const groupedData = responseData?.data?.categoryData?.reduce(
           (acc = {}, item) => {
             const { categoryType, ...rest } = item;
             if (!acc[categoryType]) {
@@ -28,13 +70,23 @@ const CategoryModal = () => {
           {}
         );
         setSelectedCardData(groupedData);
-        dispatch(closeModal());
+        dispatch(
+          addToast({
+            messageType: "S",
+            message: "Category Created successfully",
+          })
+        );
+      } else {
+        dispatch(addToast({ messageType: "E", message: responseData.message }));
       }
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+      dispatch(closeModal());
+    }
   };
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getCategoryById(categoryId);
+      const data = await getCategoryById(learningModuleId);
       if (data) {
         const groupedData = data?.categoryData?.reduce((acc = {}, item) => {
           const { categoryType, ...rest } = item;
@@ -49,7 +101,7 @@ const CategoryModal = () => {
     };
 
     fetchData();
-  }, [categoryId]);
+  }, [learningModuleId]);
   return (
     <div className="p-6 h-screen w-[80%]">
       <h1 className="text-3xl font-bold mb-6">Create Categories</h1>
@@ -89,6 +141,16 @@ const CategoryModal = () => {
                           : "bg-yellow-100"
                       } hover:scale-105`}
                     >
+                      <IconButton
+                        className=" float-right"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteCategory(item._id);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                       <h3 className="text-xl font-medium text-gray-700 mb-1">
                         {item.title}
                       </h3>
