@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 import { showLoader, hideLoader } from "../slice/loaderSlice";
 import Analysis from "../utils/Analysis";
-import { userLogin } from "../api/apiData";
+import { getAuthorization, userLogin } from "../api/apiData";
 import { addUserData } from "../slice/userSlice";
+import { addAuthorization } from "../slice/authSlice";
 
 const Login = () => {
   const [mail, setMail] = useState("");
@@ -22,7 +23,10 @@ const Login = () => {
       if (response?.messageType == "E") {
         console.log(response.message);
       } else if (response) {
-        console.log(response);
+        const authResponse = await getAuthorization(response?.id);
+        if (authResponse?.messageType == "S") {
+          dispatch(addAuthorization(authResponse?.data));
+        }
         dispatch(addUserData(response));
         navigate("/dashboard");
       }

@@ -5,7 +5,7 @@ import {
   getCategoryById,
   deleteCategory,
 } from "../../api/apiData";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeModal, openModal } from "../../slice/modalSlice";
 import AddNewCategory from "./AddNewCategory";
 import { useParams } from "react-router-dom";
@@ -20,6 +20,9 @@ const CategoryModal = () => {
   const [modalKey, setModalKey] = useState("");
   const { learningModuleId } = useParams();
   const dispatch = useDispatch();
+  const auth = useSelector((store) => store.auth);
+  const actionAuthorization = auth?.actionAuthorization;
+  const displayAuthorization = auth?.displayAuthorization;
   const handleDeleteCategory = async (categoryId) => {
     try {
       dispatch(showLoader());
@@ -141,16 +144,18 @@ const CategoryModal = () => {
                           : "bg-yellow-100"
                       } hover:scale-105`}
                     >
-                      <IconButton
-                        className=" float-right"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleDeleteCategory(item._id);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      {actionAuthorization?.deleteCategory == true && (
+                        <IconButton
+                          className=" float-right"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteCategory(item._id);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
                       <h3 className="text-xl font-medium text-gray-700 mb-1">
                         {item.title}
                       </h3>

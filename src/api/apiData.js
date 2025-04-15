@@ -209,11 +209,10 @@ export const userLogout = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     const responseData = await response.json();
-    if (responseData?.messageType == "S") {
-      return responseData?.data;
-    }
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -268,6 +267,50 @@ export const deleteCategory = async (learningModuleId, categoryId) => {
           learningModuleId: learningModuleId,
           categoryId: categoryId,
         }),
+        credentials: "include",
+      }
+    );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const addAuthorizations = async (
+  userId,
+  actionRelAuthorizations,
+  displayRelAuthorizations
+) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/authorization/addAutorization`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          learningModuleId: learningModuleId,
+          categoryId: categoryId,
+        }),
+        credentials: "include",
+      }
+    );
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const getAuthorization = async (userId) => {
+  try {
+    const response = await fetch(
+      `${process.env.BACKEND_URL}/authorization/getAutorization/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
       }
     );
