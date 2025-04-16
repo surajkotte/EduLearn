@@ -2,20 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IoAddCircleOutline } from "react-icons/io5";
 import Modal from "../../utils/modal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../../slice/modalSlice";
 import { createLearningModule, getAllLearningModles } from "../../api/apiData";
-import CategoryModal from "./CategoryModal";
 import LearningModal from "./LearningModal";
 const LearningModule = () => {
   const [cardsData, setCardsData] = useState([]);
   const [modalKey, setModalKey] = useState("");
   const dispatch = useDispatch();
+  const user = useSelector((store) => store.user);
   const nextClicked = () => {};
   const saveClicked = async (learningModalInfo) => {
-    console.log(learningModalInfo);
     if (learningModalInfo && learningModalInfo?.name) {
-      const responseData = await createLearningModule(learningModalInfo);
+      const responseData = await createLearningModule(
+        learningModalInfo,
+        user?.organizationId
+      );
       if (responseData) {
         cardsData.push(responseData);
         setCardsData(cardsData);
@@ -26,7 +28,7 @@ const LearningModule = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllLearningModles();
+      const data = await getAllLearningModles(user?.organizationId);
       if (data && data.length > 0) {
         setCardsData(data);
       }
@@ -55,7 +57,7 @@ const LearningModule = () => {
             >
               <div
                 key={card?._id}
-                className="bg-gray-300 rounded-2xl shadow-md hover:cursor-pointer transition duration-300 relative hover:scale-105"
+                className="bg-gray-300 rounded-2xl shadow-md hover:cursor-pointer transition duration-300 relative hover:scale-105 min-h-[318px]"
                 onClick={() => {
                   setModalKey({ type: "categoryModal", id: card?._id });
                   dispatch(openModal("categoryModal"));
@@ -68,7 +70,7 @@ const LearningModule = () => {
                 />
                 <div className="absolute top-2 left-2 bg-white rounded-full p-1 shadow-md">
                   <img
-                    src={card.logo || null}
+                    src={card?.logo || null}
                     alt={`${card.name} logo`}
                     className="w-8 h-8 object-contain"
                   />

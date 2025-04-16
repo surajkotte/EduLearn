@@ -15,7 +15,8 @@ import Login from "./src/components/Login";
 import AuthenticatedRoute from "./src/utils/AuthenticatedRoute";
 import ProtectedRoute from "./src/utils/ProtectedRoute";
 import Toast from "./src/utils/Toast";
-import './src/index.css'
+import "./src/index.css";
+import Signup from "./src/components/signup";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
@@ -45,7 +46,7 @@ const routers = createBrowserRouter([
         path: "/connections",
         element: <Dashboard />,
       },
-      { path: "/notifications", element: <LearningModule /> },
+      { path: "/createnewmodules", element: <LearningModule /> },
       { path: "/profile", element: <Dashboard /> },
       { path: "/cards/:cardId", element: <DashboardCard /> },
       {
@@ -73,6 +74,10 @@ const routers = createBrowserRouter([
         <Login />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
   },
 ]);
 root.render(

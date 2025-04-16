@@ -13,9 +13,12 @@ import { clearUserData } from "../slice/userSlice";
 import { clearAuthorization } from "../slice/authSlice";
 import { useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import { useSelector } from "react-redux";
+import checkIsAuthorized from "../utils/checkIsAuthorized";
 const Sidebar = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store) => store.user);
   const icons = [
     {
       icon: <HomeOutlined style={{ fontSize: "28px" }} />,
@@ -27,7 +30,7 @@ const Sidebar = ({ children }) => {
           <RiDashboardFill style={{ fontSize: "32px" }} />
         </div>
       ),
-      link: "/notifications",
+      link: "/createnewmodules",
     },
     { icon: <MdAssessment style={{ fontSize: "28px" }} />, link: "/analytics" },
     { icon: <GrResources style={{ fontSize: "28px" }} />, link: "/chat" },
@@ -55,15 +58,18 @@ const Sidebar = ({ children }) => {
     <div className="flex h-screen w-full flex-col bg-gray-900 text-white">
       <div className="flex w-full flex-1 overflow-hidden">
         <div className="fixed left-2 top-1/2 transform -translate-y-1/2 flex flex-col h-fit border-[1px] border-gray-700 w-[60px] rounded-3xl justify-center items-center gap-6 bg-gray-800 bg-opacity-60 backdrop-blur-md z-10 shadow-lg p-3">
-          {icons.map((iconinfo, index) => (
-            <Link
-              to={iconinfo.link}
-              className="transition-transform duration-300 transform hover:scale-110 hover:text-blue-400"
-              key={index + iconinfo.link}
-            >
-              {iconinfo.icon}
-            </Link>
-          ))}
+          {icons.map(
+            (iconinfo, index) =>
+              checkIsAuthorized(iconinfo, user) == true && (
+                <Link
+                  to={iconinfo.link}
+                  className="transition-transform duration-300 transform hover:scale-110 hover:text-blue-400"
+                  key={index + iconinfo.link}
+                >
+                  {iconinfo.icon}
+                </Link>
+              )
+          )}
           <button onClick={handleLogout}>
             <IoIosLogOut
               style={{ fontSize: "28px" }}

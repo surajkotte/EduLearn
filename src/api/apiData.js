@@ -4,10 +4,9 @@ dotenv.config();
 
 const BACKEND_URL = "http://localhost:4000";
 //  learning models related api calls
-export const getAllLearningModles = async () => {
+export const getAllLearningModles = async (id) => {
   try {
-    console.log("Fetching Learning Models..." + BACKEND_URL);
-    const response = await fetch(`${BACKEND_URL}/learning/getAll`, {
+    const response = await fetch(`${BACKEND_URL}/learning/getAll/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -102,7 +101,7 @@ export const updateQuestionData = async (categoryId, data) => {
   }
 };
 
-export const createLearningModule = async (data) => {
+export const createLearningModule = async (data, organizationId) => {
   try {
     const response = await fetch(
       `${process.env.BACKEND_URL}/learning/createNew`,
@@ -111,7 +110,7 @@ export const createLearningModule = async (data) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...data }),
+        body: JSON.stringify({ ...data, organizationId: organizationId }),
       }
     );
     const responseData = await response.json();
@@ -200,6 +199,21 @@ export const userLogin = async (data) => {
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
+};
+
+export const userSignup = async (data) => {
+  if (!data?.emailId || !data?.password) {
+    throw new Error("Enter email or password");
+  }
+  const response = await fetch(`${process.env.BACKEND_URL}/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ...data }),
+  });
+  const responseData = await response.json();
+  return responseData;
 };
 
 export const userLogout = async () => {

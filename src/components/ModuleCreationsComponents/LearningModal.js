@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
+import { useSelector } from "react-redux";
 const LearningModal = ({ saveClicked, nextClicked }) => {
   const [learningModalInfo, setLearningModalInfo] = useState({
     name: "",
     description: "",
     image: "",
-    logo: "",
     progress: "",
   });
+  const user = useSelector((store) => store.user);
   const onSaveClicked = () => {
     saveClicked(learningModalInfo);
   };
@@ -55,19 +56,6 @@ const LearningModal = ({ saveClicked, nextClicked }) => {
             setLearningModalInfo((prev) => ({
               ...prev,
               image: e.target.value,
-            }))
-          }
-          sx={{ width: "100%" }}
-        />
-        <TextField
-          id="outlined-basic"
-          label="Upload Logo"
-          variant="outlined"
-          value={learningModalInfo?.logo}
-          onChange={(e) =>
-            setLearningModalInfo((prev) => ({
-              ...prev,
-              logo: e.target.value,
             }))
           }
           sx={{ width: "100%" }}
