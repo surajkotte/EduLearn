@@ -4,7 +4,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { RiDashboardFill } from "react-icons/ri";
 import { SiOpenai } from "react-icons/si";
 import { Avatar } from "@mui/material";
-import { GrResources } from "react-icons/gr";
+import { TiGroupOutline } from "react-icons/ti";
 import { MdAssessment } from "react-icons/md";
 import { userLogout } from "../api/apiData";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import { clearAuthorization } from "../slice/authSlice";
 import { useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
 import { useSelector } from "react-redux";
+import { GrUserAdmin } from "react-icons/gr";
 import checkIsAuthorized from "../utils/checkIsAuthorized";
 const Sidebar = ({ children }) => {
   const dispatch = useDispatch();
@@ -32,8 +33,14 @@ const Sidebar = ({ children }) => {
       ),
       link: "/createnewmodules",
     },
-    { icon: <MdAssessment style={{ fontSize: "28px" }} />, link: "/analytics" },
-    { icon: <GrResources style={{ fontSize: "28px" }} />, link: "/chat" },
+    {
+      icon: <TiGroupOutline style={{ fontSize: "28px" }} />,
+      link: "/groupUsers",
+    },
+    {
+      icon: <GrUserAdmin style={{ fontSize: "28px" }} />,
+      link: "/assignModules",
+    },
     {
       icon: <SiOpenai style={{ fontSize: "28px" }} />,
       link: "/connections",

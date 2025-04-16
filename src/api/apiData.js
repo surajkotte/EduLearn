@@ -6,6 +6,9 @@ const BACKEND_URL = "http://localhost:4000";
 //  learning models related api calls
 export const getAllLearningModles = async (id) => {
   try {
+    if (!id) {
+      throw new Error("CategoryId is mandatory");
+    }
     const response = await fetch(`${BACKEND_URL}/learning/getAll/${id}`, {
       method: "GET",
       headers: {
@@ -333,4 +336,19 @@ export const getAuthorization = async (userId) => {
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
+};
+
+export const getAllUsers = async (organizationId, userCategory) => {
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/getAllUsers/${userCategory}/${organizationId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
 };

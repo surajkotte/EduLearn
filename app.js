@@ -17,6 +17,8 @@ import ProtectedRoute from "./src/utils/ProtectedRoute";
 import Toast from "./src/utils/Toast";
 import "./src/index.css";
 import Signup from "./src/components/signup";
+import Assignmodule from "./src/components/AssignModules/Assignmodule";
+import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
@@ -39,8 +41,12 @@ const routers = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "/chat",
-        element: <LearningModule />,
+        path: "/assignModules",
+        element: <Assignmodule />,
+      },
+      {
+        path: "/groupusers",
+        element: <GroupUserDahboard />,
       },
       {
         path: "/connections",
