@@ -30,10 +30,11 @@ export default function Modal({
         }
         onOutsideClick?.();
       }}
+      className="rounded-2xl"
     >
       {title && <DialogTitle>{title}</DialogTitle>}
       {/* <DialogContent style={{ backgroundColor: "#0f1114" }}> */}
-      <DialogContent className={style}>{children}</DialogContent>
+      <DialogContent className="rounded-2xl">{children}</DialogContent>
     </Dialog>
   );
 }

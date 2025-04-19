@@ -17,11 +17,7 @@ export const getAllLearningModles = async (id) => {
       credentials: "include",
     });
     const responseData = await response.json();
-    if (responseData?.messageType == "S") {
-      return responseData?.data;
-    } else {
-      throw new Error(responseData?.message);
-    }
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -351,4 +347,77 @@ export const getAllUsers = async (organizationId, userCategory) => {
   );
   const responseData = await response.json();
   return responseData;
+};
+
+export const createnewGroup = async (data) => {
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/userroute/createGroup`,
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ ...data }),
+      credentials: "include",
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const getGroupes = async (organizationId) => {
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/userroute/getGroupes/${organizationId}`,
+    {
+      method: "GET",
+      headers: { "content-type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const updateGroup = async (id, title, description, users) => {
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/userroute/updateGroup/${id}`,
+    {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ title, description, users }),
+      credentials: "include",
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const UpdateLearningModules = async (
+  organizationId,
+  GroupId,
+  Modules
+) => {
+  try {
+    if (!GroupId || !organizationId || !Modules) {
+      throw new Error("Mandatory Info Missing");
+    }
+    const response = await fetch(
+      `${BACKEND_URL}/learning/assignModules/${organizationId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          learningModules: Modules,
+          GroupId: GroupId,
+        }),
+        credentials: "include",
+      }
+    );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
 };
