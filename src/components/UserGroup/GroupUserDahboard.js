@@ -177,7 +177,7 @@ const GroupUserDashboard = () => {
         <Modal
           maxWidth="sm"
           uniqueKey={modelKey?.type}
-          closeOnOutsideClick={true}
+          closeOnOutsideClick={false}
           title={
             modelKey?.type === "newGroup"
               ? "Create New Group"
@@ -204,6 +204,7 @@ const GroupUserDashboard = () => {
               organizationId={user?.organizationId}
               onCancelClick={() => dispatch(closeModal(modelKey?.type))}
               cardInfo={groupData.find((data) => data?._id == modelKey?.id)}
+              userId={user?.id}
             />
           )}
         </Modal>

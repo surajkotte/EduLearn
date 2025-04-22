@@ -4,18 +4,21 @@ dotenv.config();
 
 const BACKEND_URL = "http://localhost:4000";
 //  learning models related api calls
-export const getAllLearningModles = async (id) => {
+export const getAllLearningModles = async (organizationId, userId) => {
   try {
-    if (!id) {
+    if (!organizationId || !userId) {
       throw new Error("CategoryId is mandatory");
     }
-    const response = await fetch(`${BACKEND_URL}/learning/getAll/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${BACKEND_URL}/learning/getAll/${organizationId}/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     const responseData = await response.json();
     return responseData;
   } catch (err) {
@@ -412,6 +415,28 @@ export const UpdateLearningModules = async (
           learningModules: Modules,
           GroupId: GroupId,
         }),
+        credentials: "include",
+      }
+    );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const getAssignedLearningModules = async (GroupId, organizationId) => {
+  try {
+    if (!GroupId) {
+      throw new Error("Mandatory Info Missing");
+    }
+    const response = await fetch(
+      `${BACKEND_URL}/learning/getAssignedModules/${GroupId}/${organizationId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
       }
     );

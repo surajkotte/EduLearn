@@ -1,5 +1,5 @@
 const checkIsAuthorized = (sidbarcomponent, user) => {
-  if (user?.userCategory == "Admin") {
+  if (user?.userCategory == "Admin" || user?.userCategory == "Student") {
     return true;
   }
 };

@@ -39,7 +39,7 @@ const AuthenticatedRoute = ({ children }) => {
     if (!token) {
       setIsAuthenticated(false);
       dispatch(clearUserData());
-      navigate("/login");
+     // navigate("/login");
     }
     try {
       const decoded = await jwtDecode(token);
@@ -83,7 +83,7 @@ const AuthenticatedRoute = ({ children }) => {
       }
     }
   }, []);
-  return isAUthenticated == true ? children : <Login />;
+  return isAUthenticated === true ? children : <Login />;
 };
 
 export default AuthenticatedRoute;

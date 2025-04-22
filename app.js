@@ -22,13 +22,13 @@ import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
+    // <AuthenticatedRoute>
     <Sidebar>
       <Loader>
-        <AuthenticatedRoute>
-          <Outlet />
-        </AuthenticatedRoute>
+        <Outlet />
       </Loader>
     </Sidebar>
+    //  </AuthenticatedRoute>
   );
 };
 const routers = createBrowserRouter([

@@ -30,7 +30,10 @@ const LearningModule = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllLearningModles(user?.organizationId);
+      const response = await getAllLearningModles(
+        user?.organizationId,
+        user?.id
+      );
       if (response?.messageType == "S") {
         setCardsData(response?.data);
       }
@@ -54,7 +57,7 @@ const LearningModule = () => {
         </div>
 
         {/* Existing Cards */}
-        {cardsData.map((card, idx) => (
+        {cardsData?.map((card, idx) => (
           <Link
             to={`/category/createNew/${card?._id}`}
             key={`createCategory-${card?._id}-${idx}`}

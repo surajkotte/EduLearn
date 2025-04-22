@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import { getAllLearningModles, UpdateLearningModules } from "../../api/apiData";
+import {
+  getAllLearningModles,
+  getAssignedLearningModules,
+  UpdateLearningModules,
+} from "../../api/apiData";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../slice/toastSlice";
-const AddLearningModules = ({ organizationId, onCancelClick, cardInfo }) => {
+const AddLearningModules = ({
+  organizationId,
+  onCancelClick,
+  cardInfo,
+  userId,
+}) => {
   const [learningModules, setLearningModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState([]);
+  const [assignedModules, setAssignedModules] = useState("");
   const dispatch = useDispatch();
   const fetchLearningModules = async () => {
-    const response = await getAllLearningModles(organizationId);
+    const response = await getAllLearningModles(organizationId, userId);
     if (response?.messageType === "S") {
       const modifiedData = response?.data?.map((info) => ({
         label: info?.name,
@@ -19,9 +29,37 @@ const AddLearningModules = ({ organizationId, onCancelClick, cardInfo }) => {
     }
   };
 
+  const fetchAssignedModules = async () => {
+    const response = await getAssignedLearningModules(
+      cardInfo?._id,
+      organizationId
+    );
+    if (response?.messageType === "S") {
+      const assigned = response?.data?.modules?.map((mod) => {
+        const moduleInfo = learningModules.find(
+          (lm) => lm.value === mod.moduleId.toString()
+        );
+        return {
+          label: moduleInfo?.label || "Unknown",
+          value: mod.moduleId,
+          permissions: {
+            read: mod.readAccess,
+            write: mod.writeAccess,
+          },
+        };
+      });
+      setSelectedModule(assigned);
+    }
+  };
+  useEffect(() => {
+    if (learningModules.length > 0 && cardInfo?._id) {
+      fetchAssignedModules();
+    }
+  }, [learningModules, cardInfo]);
+
   useEffect(() => {
     fetchLearningModules();
-  }, []);
+  }, [cardInfo]);
 
   const handleModuleChange = (selectedOptions) => {
     const updated = selectedOptions?.map((module) => {

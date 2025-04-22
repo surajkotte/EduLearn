@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const ProtectedRoute = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState();
+  const [isChecking, setIsChecking] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const check = async () => {
@@ -19,16 +20,22 @@ const ProtectedRoute = ({ children }) => {
     } catch (err) {
       dispatch(clearUserData());
       setIsLoggedIn(false);
+    } finally {
+      setIsChecking(false);
     }
   };
   useEffect(() => {
     check();
   }, []);
-  if (!isLoggedIn) {
-    return children;
-  } else {
-    navigate("/dashboard");
+  useEffect(() => {
+    if (!isChecking && isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [isLoggedIn, isChecking]);
+  if (isChecking) {
+    return null;
   }
+  return !isLoggedIn ? children : null;
 };
 
 export default ProtectedRoute;
