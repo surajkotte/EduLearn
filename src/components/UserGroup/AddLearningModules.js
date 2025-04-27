@@ -6,19 +6,24 @@ import {
   UpdateLearningModules,
 } from "../../api/apiData";
 import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToast } from "../../slice/toastSlice";
+import { hideLoader, showLoader } from "../../slice/loaderSlice";
 const AddLearningModules = ({
   organizationId,
   onCancelClick,
   cardInfo,
   userId,
+  selectedModule1,
+  learningModules1,
 }) => {
-  const [learningModules, setLearningModules] = useState([]);
-  const [selectedModule, setSelectedModule] = useState([]);
+  const [learningModules, setLearningModules] = useState("");
+  const [selectedModule, setSelectedModule] = useState("");
   const [assignedModules, setAssignedModules] = useState("");
+  const loader = useSelector((store) => store.loader);
   const dispatch = useDispatch();
   const fetchLearningModules = async () => {
+    dispatch(showLoader());
     const response = await getAllLearningModles(organizationId, userId);
     if (response?.messageType === "S") {
       const modifiedData = response?.data?.map((info) => ({
@@ -27,9 +32,11 @@ const AddLearningModules = ({
       }));
       setLearningModules(modifiedData);
     }
+    dispatch(hideLoader());
   };
 
   const fetchAssignedModules = async () => {
+    dispatch(showLoader());
     const response = await getAssignedLearningModules(
       cardInfo?._id,
       organizationId
@@ -50,20 +57,26 @@ const AddLearningModules = ({
       });
       setSelectedModule(assigned);
     }
+    dispatch(hideLoader());
   };
-  useEffect(() => {
-    if (learningModules.length > 0 && cardInfo?._id) {
-      fetchAssignedModules();
-    }
-  }, [learningModules, cardInfo]);
+  // useEffect(() => {
+  //   if (learningModules.length > 0 && cardInfo?._id) {
+  //     fetchAssignedModules();
+  //   }
+  // }, [learningModules, cardInfo]);
 
+  // useEffect(() => {
+  //   fetchLearningModules();
+  // }, [cardInfo]);
   useEffect(() => {
-    fetchLearningModules();
-  }, [cardInfo]);
+    console.log(learningModules1);
+    setLearningModules(learningModules1);
+    setSelectedModule(selectedModule1);
+  }, []);
 
   const handleModuleChange = (selectedOptions) => {
     const updated = selectedOptions?.map((module) => {
-      const existing = selectedModule.find((m) => m.value === module.value);
+      const existing = selectedModule?.find((m) => m?.value === module?.value);
       return (
         existing || {
           ...module,
@@ -117,64 +130,68 @@ const AddLearningModules = ({
   };
 
   return (
-    <div className="space-y-4">
-      <Select
-        options={learningModules}
-        isMulti
-        value={selectedModule}
-        onChange={handleModuleChange}
-        className="z-50"
-        placeholder="Select learning modules..."
-      />
+    learningModules && (
+      <div className="space-y-4">
+        <Select
+          options={learningModules}
+          isMulti
+          value={selectedModule}
+          onChange={handleModuleChange}
+          className="z-50"
+          placeholder="Select learning modules..."
+        />
 
-      <div className="flex flex-wrap gap-4 max-h-60 overflow-y-auto border p-4 rounded bg-gray-50">
-        {selectedModule?.length === 0 ? (
-          <span className="text-gray-500">No Modules Selected</span>
-        ) : (
-          selectedModule.map((mod, index) => (
-            <div
-              key={mod.value + index}
-              className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 border rounded bg-white shadow-sm"
-            >
-              <div className="flex items-center gap-2 text-blue-800 font-medium">
-                <span>{mod.label}</span>
-              </div>
+        <div className="flex flex-wrap gap-4 max-h-60 overflow-y-auto border p-4 rounded bg-gray-50">
+          {selectedModule?.length === 0 ? (
+            <span className="text-gray-500">No Modules Selected</span>
+          ) : (
+            selectedModule?.map((mod, index) => (
+              <div
+                key={mod.value + index}
+                className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 border rounded bg-white shadow-sm"
+              >
+                <div className="flex items-center gap-2 text-blue-800 font-medium">
+                  <span>{mod.label}</span>
+                </div>
 
-              <div className="flex gap-4 items-center">
-                <label className="flex items-center gap-1 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={mod.permissions?.read || false}
-                    onChange={() => handlePermissionChange(mod.value, "read")}
-                  />
-                  Read
-                </label>
-                <label className="flex items-center gap-1 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={mod.permissions?.write || false}
-                    onChange={() => handlePermissionChange(mod.value, "write")}
-                  />
-                  Write
-                </label>
+                <div className="flex gap-4 items-center">
+                  <label className="flex items-center gap-1 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={mod.permissions?.read || false}
+                      onChange={() => handlePermissionChange(mod.value, "read")}
+                    />
+                    Read
+                  </label>
+                  <label className="flex items-center gap-1 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={mod.permissions?.write || false}
+                      onChange={() =>
+                        handlePermissionChange(mod.value, "write")
+                      }
+                    />
+                    Write
+                  </label>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
+        <div className="flex justify-end gap-4 mt-4">
+          <Button variant="outlined" onClick={onCancelClick}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleAddClicked(cardInfo?._id)}
+          >
+            Add
+          </Button>
+        </div>
       </div>
-      <div className="flex justify-end gap-4 mt-4">
-        <Button variant="outlined" onClick={onCancelClick}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleAddClicked(cardInfo?._id)}
-        >
-          Add
-        </Button>
-      </div>
-    </div>
+    )
   );
 };
 

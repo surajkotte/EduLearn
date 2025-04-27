@@ -6,7 +6,7 @@ import Dashboard from "./src/components/Dashboard";
 import DashboardCard from "./src/components/DashboardComponents/DashboardCard";
 import QuestionsCompnent from "./src/components/DashboardComponents/QuestionsCompnent";
 import { Provider } from "react-redux";
-import store from "./src/Redux/store";
+import store, { persistor } from "./src/Redux/store";
 import Loader from "./src/utils/Loader";
 import LearningModule from "./src/components/ModuleCreationsComponents/LearningModule";
 import CategoryModal from "./src/components/ModuleCreationsComponents/CategoryModal";
@@ -16,19 +16,20 @@ import AuthenticatedRoute from "./src/utils/AuthenticatedRoute";
 import ProtectedRoute from "./src/utils/ProtectedRoute";
 import Toast from "./src/utils/Toast";
 import "./src/index.css";
+import { PersistGate } from "redux-persist/integration/react";
 import Signup from "./src/components/signup";
 import Assignmodule from "./src/components/AssignModules/Assignmodule";
 import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
-    // <AuthenticatedRoute>
-    <Sidebar>
-      <Loader>
-        <Outlet />
-      </Loader>
-    </Sidebar>
-    //  </AuthenticatedRoute>
+    <AuthenticatedRoute>
+      <Sidebar>
+        <Loader>
+          <Outlet />
+        </Loader>
+      </Sidebar>
+    </AuthenticatedRoute>
   );
 };
 const routers = createBrowserRouter([
@@ -88,8 +89,10 @@ const routers = createBrowserRouter([
 ]);
 root.render(
   <Provider store={store}>
-    <Toast>
-      <RouterProvider router={routers} />
-    </Toast>
+    <PersistGate loading={<Loader />} persistor={persistor}>
+      <Toast>
+        <RouterProvider router={routers} />
+      </Toast>
+    </PersistGate>
   </Provider>
 );

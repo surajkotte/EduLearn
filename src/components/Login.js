@@ -8,6 +8,8 @@ import { getAuthorization, userLogin } from "../api/apiData";
 import { addUserData } from "../slice/userSlice";
 import { addAuthorization } from "../slice/authSlice";
 import LoginAsAdmin from "./LoginAsAdmin";
+import { addToast } from "../slice/toastSlice";
+import { showLoader, hideLoader } from "../slice/loaderSlice";
 
 const Login = () => {
   const [mail, setMail] = useState("");
@@ -18,26 +20,38 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async () => {
     try {
+      dispatch(showLoader());
       const response = await userLogin({
         emailId: mail,
         password: password,
       });
       if (response?.messageType == "E") {
-        console.log(response.message);
+        dispatch(addToast({ messageType: "E", message: response?.message }));
       } else if (response) {
         const authResponse = await getAuthorization(response?.id);
         if (authResponse?.messageType == "S") {
+          dispatch(addToast({ messageType: "S", message: "Login successful" }));
           dispatch(addAuthorization(authResponse?.data));
         }
         dispatch(addUserData(response));
         navigate("/dashboard");
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error("Login error:", err);
+      dispatch(
+        addToast({
+          messageType: "E",
+          message: "Login failed. Please try again.",
+        })
+      );
+    } finally {
+      dispatch(hideLoader());
+    }
   };
   useEffect(() => {
-    // if (user) {
-    //   navigate("/dashboard");
-    // }
+    if (user) {
+      navigate("/dashboard");
+    }
   }, []);
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-800 text-white">

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../../slice/modalSlice";
 import { createLearningModule, getAllLearningModles } from "../../api/apiData";
 import LearningModal from "./LearningModal";
-
+import { showLoader, hideLoader } from "../../slice/loaderSlice";
 const LearningModule = () => {
   const [cardsData, setCardsData] = useState([]);
   const [modalKey, setModalKey] = useState(null);
@@ -30,6 +30,7 @@ const LearningModule = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(showLoader());
       const response = await getAllLearningModles(
         user?.organizationId,
         user?.id
@@ -37,6 +38,7 @@ const LearningModule = () => {
       if (response?.messageType == "S") {
         setCardsData(response?.data);
       }
+      dispatch(hideLoader());
     };
     fetchData();
   }, []);

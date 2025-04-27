@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createnewGroup, getAllUsers, getGroupes } from "../../api/apiData";
+import {
+  createnewGroup,
+  getAllLearningModles,
+  getAllUsers,
+  getGroupes,
+  getAssignedLearningModules,
+} from "../../api/apiData";
 import { closeModal, openModal } from "../../slice/modalSlice";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { TextField, MenuItem, Button } from "@mui/material";
@@ -12,14 +18,55 @@ import { CiEdit } from "react-icons/ci";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IoAddOutline } from "react-icons/io5";
 import AddLearningModules from "./AddLearningModules";
+import { hideLoader, showLoader } from "../../slice/loaderSlice";
 const GroupUserDashboard = () => {
   const [modelKey, setModelKey] = useState("");
   const [groupData, setGroupData] = useState([]);
   const [userDetails, setUserDetails] = useState([]);
   const [userRole, setUserRole] = useState("Student");
+  const [learningModules, setLearningModules] = useState([]);
+  const [selectedModule, setSelectedModule] = useState([]);
+  const [selectedCard, setSelectedCard] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
+  const loader = useSelector((store) => store.loader);
+  const fetchLearningModules = async () => {
+    dispatch(showLoader());
+    const response = await getAllLearningModles(user?.organizationId, user?.id);
+    if (response?.messageType === "S") {
+      const modifiedData = response?.data?.map((info) => ({
+        label: info?.name,
+        value: info?._id,
+      }));
+      setLearningModules(modifiedData);
+    }
+    dispatch(hideLoader());
+  };
 
+  const fetchAssignedModules = async () => {
+    dispatch(showLoader());
+    const response = await getAssignedLearningModules(
+      selectedCard,
+      user?.organizationId
+    );
+    if (response?.messageType === "S") {
+      const assigned = response?.data?.modules?.map((mod) => {
+        const moduleInfo = learningModules.find(
+          (lm) => lm.value === mod.moduleId.toString()
+        );
+        return {
+          label: moduleInfo?.label || "Unknown",
+          value: mod.moduleId,
+          permissions: {
+            read: mod.readAccess,
+            write: mod.writeAccess,
+          },
+        };
+      });
+      setSelectedModule(assigned);
+    }
+    dispatch(hideLoader());
+  };
   const saveNewGroup = async (selectedUsers, groupdetails) => {
     console.log(selectedUsers);
     try {
@@ -68,13 +115,28 @@ const GroupUserDashboard = () => {
 
   useEffect(() => {
     const fetchGroupes = async () => {
+      dispatch(showLoader());
       const response = await getGroupes(user?.organizationId);
       if (response?.messageType === "S") {
         setGroupData(response?.data);
       }
+      dispatch(hideLoader());
     };
     fetchGroupes();
   }, []);
+
+  useEffect(() => {
+    console.log(selectedCard + " " + learningModules?.length);
+    if (selectedCard && learningModules?.length > 0) {
+      fetchAssignedModules();
+    }
+  }, [learningModules]);
+
+  useEffect(() => {
+    if (selectedCard) {
+      fetchLearningModules();
+    }
+  }, [selectedCard]);
 
   return (
     <div className="p-6 min-h-screen w-full">
@@ -106,7 +168,6 @@ const GroupUserDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {/* Add New Group Card */}
         <div
           onClick={() => {
             setModelKey({ type: "newGroup", id: "" });
@@ -118,7 +179,6 @@ const GroupUserDashboard = () => {
           <span className="text-lg font-semibold">Create New Group</span>
         </div>
 
-        {/* Group Cards */}
         {groupData?.map((data) => (
           <div
             key={data._id}
@@ -161,6 +221,7 @@ const GroupUserDashboard = () => {
                 startIcon={<IoAddOutline />}
                 onClick={(e) => {
                   e.stopPropagation();
+                  setSelectedCard(data?._id);
                   setModelKey({ type: "AddModules", id: data?._id });
                   dispatch(openModal("AddModules"));
                 }}
@@ -172,8 +233,7 @@ const GroupUserDashboard = () => {
         ))}
       </div>
 
-      {/* Modal Section */}
-      {modelKey && (
+      {modelKey && !loader?.isLoading && (
         <Modal
           maxWidth="sm"
           uniqueKey={modelKey?.type}
@@ -200,12 +260,19 @@ const GroupUserDashboard = () => {
               cardInfo={groupData.find((data) => data?._id == modelKey?.id)}
             />
           ) : (
-            <AddLearningModules
-              organizationId={user?.organizationId}
-              onCancelClick={() => dispatch(closeModal(modelKey?.type))}
-              cardInfo={groupData.find((data) => data?._id == modelKey?.id)}
-              userId={user?.id}
-            />
+            learningModules && (
+              <AddLearningModules
+                organizationId={user?.organizationId}
+                onCancelClick={() => {
+                  setSelectedCard("");
+                  dispatch(closeModal(modelKey?.type));
+                }}
+                cardInfo={groupData.find((data) => data?._id == modelKey?.id)}
+                userId={user?.id}
+                selectedModule1={selectedModule}
+                learningModules1={learningModules}
+              />
+            )
           )}
         </Modal>
       )}

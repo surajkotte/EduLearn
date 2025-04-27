@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }) => {
   };
   useEffect(() => {
     check();
-  }, []);
+  }, [dispatch, navigate]);
   useEffect(() => {
     if (!isChecking && isLoggedIn) {
       navigate("/dashboard");

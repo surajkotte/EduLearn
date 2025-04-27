@@ -100,6 +100,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
+  const authorization = useSelector((store) => store.auth);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,6 +122,7 @@ const Dashboard = () => {
         dispatch(hideLoader());
       }
     };
+    console.log(authorization);
     fetchData();
   }, []);
 
@@ -128,7 +130,8 @@ const Dashboard = () => {
     <div className="p-6 h-screen w-full">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {cardsData?.length > 0 ? (
+        {cardsData?.length > 0 &&
+        authorization?.displayAuthorization?.displayLearningModule === true ? (
           cardsData.map(
             (card) =>
               card?.readAccess == true && (

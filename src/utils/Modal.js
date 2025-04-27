@@ -15,6 +15,7 @@ export default function Modal({
   style,
 }) {
   const modal = useSelector((store) => store.modal);
+  const loader = useSelector((store) => store.loader);
   const dispatch = useDispatch();
 
   if (modal.key != uniqueKey) return null;

@@ -307,12 +307,15 @@ export const addAuthorizations = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          learningModuleId: learningModuleId,
-          categoryId: categoryId,
+          actionRelAuthorization: actionRelAuthorizations,
+          displayRelAuthorization: displayRelAuthorizations,
+          userId: userId,
         }),
         credentials: "include",
       }
     );
+    const responseData = await response.json();
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
@@ -340,6 +343,21 @@ export const getAuthorization = async (userId) => {
 export const getAllUsers = async (organizationId, userCategory) => {
   const response = await fetch(
     `${process.env.BACKEND_URL}/getAllUsers/${userCategory}/${organizationId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const getAllUsersByOrg = async (organizationId) => {
+  const response = await fetch(
+    `${process.env.BACKEND_URL}/getAllUsers/${organizationId}`,
     {
       method: "GET",
       headers: {
@@ -440,6 +458,23 @@ export const getAssignedLearningModules = async (GroupId, organizationId) => {
         credentials: "include",
       }
     );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const UpdateUser = async (userId, userInfo) => {
+  try {
+    const response = await fetch(`${BACKEND_URL}/updateUser/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+      credentials: "include",
+    });
     const responseData = await response.json();
     return responseData;
   } catch (err) {

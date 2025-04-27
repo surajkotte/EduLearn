@@ -6,6 +6,7 @@ import { SiOpenai } from "react-icons/si";
 import { Avatar } from "@mui/material";
 import { TiGroupOutline } from "react-icons/ti";
 import { MdAssessment } from "react-icons/md";
+import { persistor } from "../Redux/store";
 import { userLogout } from "../api/apiData";
 import { useDispatch } from "react-redux";
 import { addToast } from "../slice/toastSlice";
@@ -56,6 +57,8 @@ const Sidebar = ({ children }) => {
       dispatch(addToast({ messageType: "S", message: "Logout Successfull" }));
       dispatch(clearUserData());
       dispatch(clearAuthorization());
+      localStorage.removeItem("persist:root");
+      persistor.purge();
       navigate("/login");
     } else {
       dispatch(addToast({ messageType: "E", message: response?.message }));
