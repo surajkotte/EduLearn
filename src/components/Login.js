@@ -27,13 +27,13 @@ const Login = () => {
       });
       if (response?.messageType == "E") {
         dispatch(addToast({ messageType: "E", message: response?.message }));
-      } else if (response) {
-        const authResponse = await getAuthorization(response?.id);
+      } else if (response?.messageType == "S") {
+        const authResponse = await getAuthorization(response?.data?.id);
         if (authResponse?.messageType == "S") {
           dispatch(addToast({ messageType: "S", message: "Login successful" }));
           dispatch(addAuthorization(authResponse?.data));
         }
-        dispatch(addUserData(response));
+        dispatch(addUserData(response?.data));
         navigate("/dashboard");
       }
     } catch (err) {

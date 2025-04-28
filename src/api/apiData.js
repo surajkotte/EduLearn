@@ -195,9 +195,7 @@ export const userLogin = async (data) => {
       credentials: "include",
     });
     const responseData = await response.json();
-    if (responseData?.messageType == "S") {
-      return responseData?.data;
-    }
+    return responseData;
   } catch (err) {
     return { messageType: "E", message: err.message };
   }
