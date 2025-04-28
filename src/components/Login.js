@@ -10,7 +10,7 @@ import { addAuthorization } from "../slice/authSlice";
 import LoginAsAdmin from "./LoginAsAdmin";
 import { addToast } from "../slice/toastSlice";
 import { showLoader, hideLoader } from "../slice/loaderSlice";
-
+import businessAnalysis from "../Misc/business-analysis.json";
 const Login = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
@@ -137,7 +137,7 @@ const Login = () => {
         )}
       </div>
       <div className="hidden md:flex w-full md:w-1/2 items-center justify-center bg-gray-900">
-        <Analysis />
+        <Analysis file={businessAnalysis} />
       </div>
     </div>
   );

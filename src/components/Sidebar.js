@@ -57,7 +57,7 @@ const Sidebar = ({ children }) => {
       dispatch(addToast({ messageType: "S", message: "Logout Successfull" }));
       dispatch(clearUserData());
       dispatch(clearAuthorization());
-      localStorage.removeItem("persist:root");
+      //localStorage.removeItem("persist:root");
       persistor.purge();
       navigate("/login");
     } else {

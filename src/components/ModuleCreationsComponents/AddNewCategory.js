@@ -160,7 +160,7 @@ const AddNewCategory = ({ onSaveClicked }) => {
             <TextField
               multiline
               rows={3}
-              label="Instructions"
+              label="Please add some instructions, This will be shown to the user before starting the test"
               variant="outlined"
               value={learningModalInfo?.instructions || ""}
               onChange={(e) =>

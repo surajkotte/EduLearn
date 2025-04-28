@@ -28,18 +28,7 @@ const serializeTransform = createTransform(
     }
     return inboundState;
   },
-  (outboundState, key) => {
-    if (key === "user" || key === "auth") {
-      const sanitizedState = { ...outboundState };
-      if (!sanitizedState.user) {
-        return key === "user"
-          ? { user: null, isAuthenticated: false }
-          : { user: null };
-      }
-      return sanitizedState;
-    }
-    return outboundState;
-  },
+  (outboundState, key) => outboundState,
   { whitelist: ["user", "auth"] }
 );
 
@@ -47,7 +36,7 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["user", "auth"],
-  // transforms: [serializeTransform],
+  transforms: [serializeTransform],
 };
 
 // const Store = configureStore({

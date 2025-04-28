@@ -18,6 +18,7 @@ import Toast from "./src/utils/Toast";
 import "./src/index.css";
 import { PersistGate } from "redux-persist/integration/react";
 import Signup from "./src/components/signup";
+import TestCompnent from "./src/components/DashboardComponents/TestCompnent";
 import Assignmodule from "./src/components/AssignModules/Assignmodule";
 import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -63,6 +64,10 @@ const routers = createBrowserRouter([
       {
         path: "/questions/:categoryId",
         element: <QuestionsCompnent />,
+      },
+      {
+        path: "/test/:learningModuleId/:categoryId",
+        element: <TestCompnent />,
       },
       {
         path: "/category/createNew/:learningModuleId",

@@ -40,9 +40,15 @@ const DashboardCard = () => {
               {key === "Subject" ? "📘" : "📗"} {key}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+              {console.log("Value: ", value)}
+              {console.log("Key: ", key)}
               {value.map((item) => (
                 <Link
-                  to={`/questions/${item._id}`}
+                  to={`${
+                    item?.categoryConfig?.isTimeLimitAllowed === true
+                      ? `/test/${cardId}/${item._id}`
+                      : `/questions/${item._id}`
+                  }`}
                   key={`QuestionsLink${item._id}`}
                 >
                   <div

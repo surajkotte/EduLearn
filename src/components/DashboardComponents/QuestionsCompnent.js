@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { openModal } from "../../slice/modalSlice";
 import { hideLoader, showLoader } from "../../slice/loaderSlice";
 import { Button } from "@mui/material";
+import Markdown from "marked-react";
 const QuestionsCompnent = () => {
   const { categoryId } = useParams();
   const [questions, setQuestions] = useState([]);
@@ -178,9 +179,9 @@ const QuestionsCompnent = () => {
             {/* <p className="text-gray-700 mb-4">
               Answer: {aiPromptClicked.answer}
             </p> */}
-            <span
-              dangerouslySetInnerHTML={{ __html: aiPromptClicked.answer }}
-            ></span>
+            <span className="p-2">
+              <Markdown>{aiPromptClicked?.answer}</Markdown>
+            </span>
           </div>
         </Modal>
       )}

@@ -46,10 +46,10 @@ export const getCategoryById = async (learningModuleId) => {
   }
 };
 
-export const getTestConfig = async (categoryId) => {
+export const getTestConfig = async (cardId, categoryId) => {
   try {
     const response = await fetch(
-      `${BACKEND_URL}/category/getCategoryTestConfig/${categoryId}`,
+      `${BACKEND_URL}/category/getCategoryTestConfig/${cardId}/${categoryId}`,
       {
         method: "GET",
         headers: {
@@ -57,7 +57,8 @@ export const getTestConfig = async (categoryId) => {
         },
       }
     );
-    return response?.data;
+    const responseData = await response.json();
+    return responseData;
   } catch (err) {
     console.error("Error fetching questions:", error);
     return null; // or handle the error as needed

@@ -1,9 +1,9 @@
 import React from "react";
 import Lottie from "react-lottie";
-import businessAnalysis from "../Misc/business-analysis.json";
-const Analysis = () => {
+//import businessAnalysis from "../Misc/business-analysis.json";
+const Analysis = ({ file }) => {
   const lottieOptions = {
-    animationData: businessAnalysis,
+    animationData: file,
     loop: true,
     autoplay: true,
   };
