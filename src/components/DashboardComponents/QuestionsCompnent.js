@@ -5,11 +5,13 @@ import {
   getAllQuestionsByCategoryId,
   getTestConfig,
   updateQuestionData,
+  UpdateAnswer,
+  getAllAnswers,
 } from "../../api/apiData";
 import { AiFillOpenAI } from "react-icons/ai";
 import { GoogleGenAI } from "@google/genai";
 import Modal from "../../utils/modal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openModal } from "../../slice/modalSlice";
 import { hideLoader, showLoader } from "../../slice/loaderSlice";
 import { Button } from "@mui/material";
@@ -19,15 +21,22 @@ const QuestionsCompnent = () => {
   const [questions, setQuestions] = useState([]);
   const [testConfig, setTestConfig] = useState("");
   const [aiPromptClicked, setAiPromptClicked] = useState(null);
+  const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(showLoader());
       const responseData = await getAllQuestionsByCategoryId(categoryId);
       if (responseData) {
+        const answersResponse = await getAllAnswers(user?.id, categoryId);
         const modifiedData = responseData?.questionData?.map((item) => {
+          const answer = answersResponse?.data?.find(
+            (answer) => answer?.questionId === item?._id
+          );
           return {
             ...item,
-            selectedOptionId: item.answerSelected,
+            answerSelected: answer?.answerId,
+            isCorrect: answer?.isCorrect,
             options: item.options.map((option) => ({
               option: option.option,
               _id: option._id,
@@ -35,12 +44,30 @@ const QuestionsCompnent = () => {
             })),
           };
         });
+        console.log("Modified Data: ", modifiedData);
         setQuestions(modifiedData);
-        const testConfigResponse = await getTestConfig(categoryId);
-        if (testConfigResponse) {
-          setTestConfig(testConfigResponse);
-        }
+        // const testConfigResponse = await getTestConfig(categoryId);
+        // if (testConfigResponse) {
+        //   setTestConfig(testConfigResponse);
+        // }
+        // const modifiedData = responseData?.questionData?.map((item) => {
+        //   return {
+        //     ...item,
+        //     selectedOptionId: item.answerSelected,
+        //     options: item.options.map((option) => ({
+        //       option: option.option,
+        //       _id: option._id,
+        //       isSelected: option.isSelected,
+        //     })),
+        //   };
+        // });
+        // setQuestions(modifiedData);
+        // const testConfigResponse = await getTestConfig(categoryId);
+        // if (testConfigResponse) {
+        //   setTestConfig(testConfigResponse);
+        // }
       }
+      dispatch(hideLoader());
     };
     fetchData();
   }, [categoryId]);
@@ -48,21 +75,49 @@ const QuestionsCompnent = () => {
   const handleSubmitCliked = async () => {
     try {
       dispatch(showLoader());
-      const response = await updateQuestionData(categoryId, questions);
-      console.log(response);
-      const updatedData = await response?.data?.questionData?.map((item) => {
-        return {
-          ...item,
-          selectedOptionId: item.answerSelected,
-          options: item.options.map((option) => ({
-            option: option.option,
-            _id: option._id,
-            isSelected: option.isSelected,
-          })),
-        };
-      });
-      console.log(updatedData);
-      setQuestions(updatedData);
+      console.log("Questions: ", questions);
+      const updatedQuestions = questions?.map((question) => ({
+        questionId: question._id,
+        answerId: question.selectedOptionId || question.answerSelected,
+      }));
+      const response = await UpdateAnswer(
+        user?.id,
+        categoryId,
+        updatedQuestions
+      );
+      if (response?.messageType == "S") {
+        const updatedData = questions?.map((item) => {
+          const answer = response?.data?.answerSelected?.find(
+            (answer) => answer?.questionId === item?._id
+          );
+          return {
+            ...item,
+            answerSelected: answer?.answerId,
+            isCorrect: item.options.find(
+              (option) => option?._id === answer?.answerId
+            )?.isAnswer,
+            options: item.options.map((option) => ({
+              option: option.option,
+              _id: option._id,
+              isSelected: option.isSelected,
+            })),
+          };
+        });
+        setQuestions(updatedData);
+      }
+      // const updatedData = await response?.data?.questionData?.map((item) => {
+      //   return {
+      //     ...item,
+      //     selectedOptionId: item.answerSelected,
+      //     options: item.options.map((option) => ({
+      //       option: option.option,
+      //       _id: option._id,
+      //       isSelected: option.isSelected,
+      //     })),
+      //   };
+      // });
+
+      // setQuestions(updatedData);
       setAiPromptClicked(null);
     } catch (error) {
       console.log("Error submitting questions:", error);

@@ -74,6 +74,7 @@ export const getAllQuestionsByCategoryId = async (categoryId) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
     const responseData = await response.json();
@@ -474,6 +475,45 @@ export const UpdateUser = async (userId, userInfo) => {
       body: JSON.stringify(userInfo),
       credentials: "include",
     });
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const UpdateAnswer = async (userId, categoryId, answerData) => {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/answers/updateanswer/${categoryId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answerData: answerData, userId: userId }),
+        credentials: "include",
+      }
+    );
+    const responseData = await response.json();
+    return responseData;
+  } catch (err) {
+    return { messageType: "E", message: err.message };
+  }
+};
+
+export const getAllAnswers = async (userId, categoryId) => {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/answers/getAnswers/${categoryId}/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     const responseData = await response.json();
     return responseData;
   } catch (err) {
