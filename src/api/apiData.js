@@ -35,11 +35,14 @@ export const getCategoryById = async (learningModuleId) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
     const responseData = await response.json();
     if (responseData?.messageType == "S") {
       return responseData?.data;
+    } else {
+      throw new Error("Error fetching category data");
     }
   } catch (err) {
     navigate("/login");
@@ -55,6 +58,7 @@ export const getTestConfig = async (cardId, categoryId) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
     const responseData = await response.json();

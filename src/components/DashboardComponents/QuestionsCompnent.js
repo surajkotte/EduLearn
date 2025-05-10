@@ -87,15 +87,13 @@ const QuestionsCompnent = () => {
       );
       if (response?.messageType == "S") {
         const updatedData = questions?.map((item) => {
-          const answer = response?.data?.answerSelected?.find(
+          const answer = response?.data?.find(
             (answer) => answer?.questionId === item?._id
           );
           return {
             ...item,
             answerSelected: answer?.answerId,
-            isCorrect: item.options.find(
-              (option) => option?._id === answer?.answerId
-            )?.isAnswer,
+            isCorrect: answer?.isCorrect,
             options: item.options.map((option) => ({
               option: option.option,
               _id: option._id,
@@ -165,7 +163,7 @@ const QuestionsCompnent = () => {
                   callOpenAi(questionInfo.question, questionInfo._id)
                 }
                 className="text-blue-400 hover:text-blue-500 transition duration-300 text-xl"
-                disabled={questionInfo?.answerSelected ? false : true}
+                disabled={questionInfo?.isCorrect ? true : false}
               >
                 <AiFillOpenAI />
               </button>

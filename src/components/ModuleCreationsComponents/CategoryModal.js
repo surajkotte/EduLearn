@@ -89,9 +89,10 @@ const CategoryModal = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(showLoader());
       const data = await getCategoryById(learningModuleId);
       if (data) {
-        const groupedData = data?.categoryData?.reduce((acc = {}, item) => {
+        const groupedData = data?.reduce((acc = {}, item) => {
           const { categoryType, ...rest } = item;
           if (!acc[categoryType]) {
             acc[categoryType] = [];
@@ -100,6 +101,7 @@ const CategoryModal = () => {
           return acc;
         }, {});
         setSelectedCardData(groupedData);
+        dispatch(hideLoader());
       }
     };
 

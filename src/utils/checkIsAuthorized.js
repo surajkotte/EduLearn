@@ -8,7 +8,7 @@ const checkIsAuthorized = (sidebarcomponent, user) => {
       link: "/dashboard",
     },
     {
-      auth: "displayAssignModule",
+      auth: "displayAssignModules",
       link: "/assignModules",
     },
     {
@@ -17,7 +17,7 @@ const checkIsAuthorized = (sidebarcomponent, user) => {
     },
     {
       auth: "displayCreateNewModule",
-      link: "/createNewModule",
+      link: "/createNewModules",
     },
   ];
   if (user?.userCategory == "Admin") {

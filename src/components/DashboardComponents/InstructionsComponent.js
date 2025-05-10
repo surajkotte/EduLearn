@@ -49,6 +49,13 @@ const InstructionsComponent = ({ testConfig, startClicked }) => {
         variant="outlined"
         size="large"
         onClick={startClicked}
+        // onClick={() =>
+        //   window.open(
+        //     "http://localhost:1234/test/67f1829d632acd718231ccb3/680f817876e8dad039b3c52a",
+        //     "_blank",
+        //     "noopener,noreferrer"
+        //   )
+        // }
       >
         Start Test
       </Button>

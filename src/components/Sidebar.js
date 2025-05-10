@@ -5,7 +5,7 @@ import { RiDashboardFill } from "react-icons/ri";
 import { SiOpenai } from "react-icons/si";
 import { Avatar } from "@mui/material";
 import { TiGroupOutline } from "react-icons/ti";
-import { MdAssessment } from "react-icons/md";
+import { MdOutlineAnalytics } from "react-icons/md";
 import { persistor } from "../Redux/store";
 import { userLogout } from "../api/apiData";
 import { useDispatch } from "react-redux";
@@ -32,11 +32,15 @@ const Sidebar = ({ children }) => {
           <RiDashboardFill style={{ fontSize: "32px" }} />
         </div>
       ),
-      link: "/createnewmodules",
+      link: "/createNewModules",
     },
     {
       icon: <TiGroupOutline style={{ fontSize: "28px" }} />,
       link: "/groupUsers",
+    },
+    {
+      icon: <MdOutlineAnalytics style={{ fontSize: "30px" }} />,
+      link: "/analytics",
     },
     {
       icon: <GrUserAdmin style={{ fontSize: "28px" }} />,

@@ -21,6 +21,7 @@ import Signup from "./src/components/signup";
 import TestCompnent from "./src/components/DashboardComponents/TestCompnent";
 import Assignmodule from "./src/components/AssignModules/Assignmodule";
 import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
+import Analytics from "./src/components/Analytics/Analytics";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const App = () => {
   return (
@@ -54,7 +55,7 @@ const routers = createBrowserRouter([
         path: "/connections",
         element: <Dashboard />,
       },
-      { path: "/createnewmodules", element: <LearningModule /> },
+      { path: "/createNewModules", element: <LearningModule /> },
       { path: "/profile", element: <Dashboard /> },
       { path: "/cards/:cardId", element: <DashboardCard /> },
       {
@@ -66,16 +67,16 @@ const routers = createBrowserRouter([
         element: <QuestionsCompnent />,
       },
       {
-        path: "/test/:learningModuleId/:categoryId",
-        element: <TestCompnent />,
-      },
-      {
         path: "/category/createNew/:learningModuleId",
         element: <CategoryModal />,
       },
       {
         path: "/questions/createNew/:categoryId",
         element: <QuestionModal />,
+      },
+      {
+        path: "/analytics",
+        element: <Analytics />,
       },
     ],
   },
@@ -90,6 +91,10 @@ const routers = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/test/:learningModuleId/:categoryId",
+    element: <TestCompnent />,
   },
 ]);
 root.render(

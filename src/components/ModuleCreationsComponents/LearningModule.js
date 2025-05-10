@@ -74,7 +74,7 @@ const LearningModule = () => {
               <img
                 src={card.image || "https://via.placeholder.com/300x150"}
                 alt={card.name}
-                className="rounded-t-2xl w-full h-40 object-cover"
+                className="rounded-t-2xl w-full h-48 object-cover"
               />
               <div className="absolute top-2 left-2 bg-white rounded-full p-1 shadow-md">
                 <img
@@ -89,21 +89,6 @@ const LearningModule = () => {
                 </h2>
                 <p className="text-sm text-gray-500 line-clamp-2">
                   {card.description}
-                </p>
-                <div className="flex justify-between text-sm text-gray-600 mt-2">
-                  <span>Levels: {card.levels}</span>
-                  <span>Status: {card.status}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-                  <div
-                    className={`h-2 rounded-full ${
-                      card.progress > 0 ? "bg-blue-500" : "bg-gray-400"
-                    }`}
-                    style={{ width: `${card.progress}%` }}
-                  />
-                </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  {card.progress}% completed
                 </p>
               </div>
             </div>
