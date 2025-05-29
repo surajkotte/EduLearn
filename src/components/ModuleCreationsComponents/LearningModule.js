@@ -72,13 +72,21 @@ const LearningModule = () => {
               }}
             >
               <img
-                src={card.image || "https://via.placeholder.com/300x150"}
+                src={
+                  card.image ||
+                  user?.organizationImage ||
+                  "https://via.placeholder.com/32"
+                }
                 alt={card.name}
                 className="rounded-t-2xl w-full h-48 object-cover"
               />
               <div className="absolute top-2 left-2 bg-white rounded-full p-1 shadow-md">
                 <img
-                  src={card?.logo || "https://via.placeholder.com/32"}
+                  src={
+                    card?.logo ||
+                    user?.organizationLogo ||
+                    "https://via.placeholder.com/32"
+                  }
                   alt={`${card.name} logo`}
                   className="w-8 h-8 object-contain"
                 />

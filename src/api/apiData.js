@@ -1,7 +1,5 @@
-import { message } from "antd";
 import dotenv from "dotenv";
 dotenv.config();
-
 const BACKEND_URL = "http://localhost:4000";
 //  learning models related api calls
 export const getAllLearningModles = async (organizationId, userId) => {
@@ -44,9 +42,7 @@ export const getCategoryById = async (learningModuleId) => {
     } else {
       throw new Error("Error fetching category data");
     }
-  } catch (err) {
-    navigate("/login");
-  }
+  } catch (err) {}
 };
 
 export const getTestConfig = async (cardId, categoryId) => {
@@ -98,6 +94,7 @@ export const updateQuestionData = async (categoryId, data) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ updatedQuestionData: data }),
       }
     );
@@ -118,6 +115,7 @@ export const createLearningModule = async (data, organizationId) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ ...data, organizationId: organizationId }),
       }
     );
@@ -137,6 +135,7 @@ export const createNewCategory = async (data, learningModuleId) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ ...data }),
       }
     );
@@ -216,6 +215,7 @@ export const userSignup = async (data) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ ...data }),
   });
   const responseData = await response.json();
@@ -229,6 +229,7 @@ export const userLogout = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       credentials: "include",
     });
     const responseData = await response.json();

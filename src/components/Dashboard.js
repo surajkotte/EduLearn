@@ -140,14 +140,20 @@ const Dashboard = () => {
                     <div className="relative">
                       <img
                         src={
-                          card.image || "https://via.placeholder.com/300x150"
+                          card.image ||
+                          user?.organizationImage ||
+                          "https://via.placeholder.com/32"
                         }
                         alt={card.name}
                         className="w-full h-48 object-cover"
                       />
                       <div className="absolute top-2 left-2 bg-white p-1 rounded-full shadow-md">
                         <img
-                          src={card.logo || "https://via.placeholder.com/32"}
+                          src={
+                            card.logo ||
+                            user?.organizationLogo ||
+                            "https://via.placeholder.com/32"
+                          }
                           alt="Logo"
                           className="w-8 h-8 object-contain"
                         />

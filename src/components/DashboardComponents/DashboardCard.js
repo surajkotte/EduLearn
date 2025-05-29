@@ -53,13 +53,13 @@ const DashboardCard = () => {
   return (
     <div className="p-6 h-screen w-[80%]">
       <h1 className="text-3xl font-bold mb-6">Dashboard Details</h1>
-      <div className="flex flex-col gap-4 w-full max-w-3xl">
+      <div className="flex flex-col gap-4 w-full">
         {Object.entries(selectedCardData).map(([key, value]) => (
           <div className="mb-8 flex flex-col" key={key}>
             <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex items-center gap-2">
               {key === "Subject" ? "📘" : "📗"} {key}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
               {value.map((item) => {
                 const total = item?.additionalInfo?.numberOfQuestions || 0;
                 const answered =
