@@ -18,7 +18,7 @@ import Toast from "./src/utils/Toast";
 import "./src/index.css";
 import { PersistGate } from "redux-persist/integration/react";
 import Signup from "./src/components/signup";
-import TestCompnent from "./src/components/DashboardComponents/TestCompnent";
+import TestCompnent from "./src/components/DashboardComponents/TestComponents/TestCompnent";
 import Assignmodule from "./src/components/AssignModules/Assignmodule";
 import GroupUserDahboard from "./src/components/UserGroup/GroupUserDahboard";
 import Analytics from "./src/components/Analytics/Analytics";
