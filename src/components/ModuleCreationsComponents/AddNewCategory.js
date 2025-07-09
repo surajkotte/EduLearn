@@ -11,7 +11,7 @@ const AddNewCategory = ({ onSaveClicked }) => {
     isTimeLimitAllowed: false,
     timeLimit: "",
     retryPossible: false,
-    maxRetryCount: "",
+    maxRetryCount: "1",
     allowRetake: false,
     instructions: "",
   });

@@ -1,12 +1,15 @@
 import React, { use, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getCategoryById } from "../../api/apiData";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../slice/loaderSlice";
+import { addToast } from "../../slice/toastSlice";
+import { message } from "antd";
 const DashboardCard = () => {
   const { cardId } = useParams();
   const [selectedCardData, setSelectedCardData] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const calculateProgress = (answered, total) => {
     if (!total || !answered) return 0;
     return Math.min(100, Math.round((answered / total) * 100));
@@ -21,6 +24,22 @@ const DashboardCard = () => {
         return "bg-yellow-100";
       default:
         return "bg-gray-100";
+    }
+  };
+  const handleMiddleWare = (cardId, questionId, item) => {
+    // e.preventDefault();
+    if (item?.categoryConfig?.isTimeLimitAllowed === true) {
+      if (
+        item?.categoryConfig?.maxRetryCountUsed !=
+        item?.categoryConfig?.maxRetryCount
+      ) {
+        navigate(`/test/${cardId}/${questionId}`);
+      } else {
+        alert("You have used all your attempts for this test.");
+        return false;
+      }
+    } else {
+      return true;
     }
   };
 
@@ -67,12 +86,30 @@ const DashboardCard = () => {
                 const progress = calculateProgress(answered, total);
                 return (
                   <Link
-                    to={`${
-                      item?.categoryConfig?.isTimeLimitAllowed === true
-                        ? `/test/${cardId}/${item._id}`
-                        : `/questions/${item._id}`
-                    }`}
+                    to="#"
                     key={`QuestionsLink${item._id}`}
+                    onClick={(e) => {
+                      e.preventDefault(); // prevent default <Link> behavior
+
+                      if (item?.categoryConfig?.isTimeLimitAllowed === true) {
+                        if (
+                          item?.categoryConfig?.maxRetryCount &&
+                          item?.categoryConfig?.maxRetryCountUsed !=
+                            item?.categoryConfig?.maxRetryCount
+                        ) {
+                          window.open(`/test/${cardId}/${item._id}`, "_blank"); // open in new tab
+                        } else {
+                          dispatch(
+                            addToast({
+                              messageType: "E",
+                              message: `You have used all your attempts for this test.`,
+                            })
+                          );
+                        }
+                      } else {
+                        navigate(`/questions/${item._id}`);
+                      }
+                    }}
                   >
                     {/* <div
                     key={item._id}
